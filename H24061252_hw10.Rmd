@@ -1,0 +1,809 @@
+---
+title: "R"
+author: "王先昀"
+output:
+  html_document:
+    toc: true
+    toc_depth: 4
+---
+
+## Introduction to the R language
+<br/>  
+
+### Basic features of R
+<br/>
+
+#### integer，number，logic，character
+
+* 「整數」 integer
+* 「實數」 number
+* 「布林代數」 logic
+* 「字串」 character
+
+1.數字：「整數」 integer ＆「實數」 number
+```{r}
+a <- 3     
+b <- 1.6   
+
+str(a)
+
+a <- as.integer(3)
+str(a)
+
+is.integer(a)
+is.integer(b)
+```
+在這裡，我們稱a和b為「變數」(或是物件)。
+而<-符號，會把右邊的東西，儲存到左邊的名字裡，使左邊的名字變成「變數」  
+<br/>
+str()函數：用來確認變數的資料型態
+上面結果顯示，a的資料型態是「number」，而非integer。因為R預設的數字型態是「number」  
+<br/>
+as.integer()函數：轉換資料型態成integer  
+
+as.numeric()函數：轉換資料型態成number  
+<br/>
+<br/>
+下表就是各種資料型態，所對應的轉換函數：  
+
+資料型態  | 轉換函數
+------------- | -------------
+integer	| as.integer()
+number |	as.numeric()
+character |	as.character()
+factor |	as.factor()
+matrix |	as.matrix()
+vector |	as.vector()
+list |	as.list()
+data frame |	as.data.frame()
+
+is.integer()函數：判斷是否為integer，回傳TRUE/FALSE  
+<br/>
+<br/>
+下表為 確認變數的資料型態是否為integer 所對應的函數：  
+
+資料型態 |	判斷函數
+------------- | -------------
+integer	| is.integer()
+number |	is.numeric()
+character |	is.character()
+factor |	is.factor()
+matrix |	is.matrix()
+vector |	is.vector()
+list |	is.list()
+data frame |	is.data.frame()  
+<br/>
+<br/>
+
+2.布林代數 (logic)  
+
+所謂的布林代數(boolean)，代表的是True和False，常用於邏輯式上的判斷。而在R裡面，以logic的資料型態來表示：
+```{r}
+a <- TRUE
+b <- FALSE
+str(a)        #確認a的型態
+is.integer(b) #判斷b是不是整數，但b是logic型態，所以回傳FALSE
+```
+<br/>
+<br/>  
+
+3.字串 (character)  
+
+要定義一個character變數的話，注意放在右邊的值，要用雙引號(" ")括起來
+```{r}
+student <- "shianyun"
+```
+
+如果沒有括起來，右邊就會視為「變數」。若沒有事先定義的話，就會跳出錯誤訊息  
+換句話說，只要事先定義好變數，那麼變數之間，就可以互相傳遞自己儲存的值  
+
+```{r}
+a <- "shianyun"    # a的資料型態是character
+student <- a   # a是變數，把a存到student裡
+str(student)   # 確認student的資料型態
+```
+<br/>
+<br/>
+
+#### vector，factor，list  
+
+1.向量vector  
+
+使用c()函數 來定義vector
+
+```{r}
+a <- c(5,10,15,20,25)           # 建立一個number vector
+b <- c("Tom", "Henry", "John")  # 建立一個character vector
+a
+b
+```
+
+vector由許多值組成，裡面的值的編號稱為index，表示方式為object[index]。  
+
+```{r}
+a[3]      # Ans: 15           (取第3個element)
+a[1:3]    # Ans: 5 10 15      (取第1~第3個element)
+a[c(2,4)] # Ans: 10 20        (取第2和第4個element)
+```
+
+需要注意的規則：「每一個element」都會是相同的型態  
+
+vector之間也可以進行數學運算  
+
+```{r}
+a <- c(7,8,6,9,5) # 建立一個number vector
+b <- c(2,4,6,0,1) # 建立一個number vector
+
+a * b             # a和b的第一個element相乘，第二個element相乘......
+b^3               # 對b之中的每一個element三次方
+b > 3             # 判斷b之中的哪些值大於 3 ，然後回傳 TRUE/FALSE
+```
+<br/>
+<br/>
+
+2.類別變數 (factor)  
+  factor的型態，主要用來表示「類別變數」(category variable)。  
+  factor的資料型態和vector很相似，差別在於factor具有額外的類別屬性(Levels)。 
+  
+  使用factor()函數 建立factor的變數
+
+```{r}
+fac=c("aaa","aba","aaa","aba")
+fac=factor(fac)    #轉換成factor型態
+fac
+as.integer(fac)
+
+levels(fac)
+levels(fac)[as.integer(fac)]
+levels(fac)[c(1,2,1,2)]
+levels(fac)[c(1,2,1,2,3)]
+is.na(levels(fac)[c(1,2,1,2,3)])
+!is.na(levels(fac)[c(1,2,1,2,3)])
+levels(fac)[c(1,2,1,2,3)][!is.na(levels(fac)[c(1,2,1,2,3)])]
+
+```
+
+levels()函數：查看factor裡面存在著哪些類別
+<br/>
+<br/>
+
+3.串列(list)  
+  list能把不同資料型態的值，放到同一個變數裡面
+  list可以存放「任何型態」的變數，包括vector＆list
+  
+```{r}
+Dr.Lee <- list(gender="man", age=18, hobby=c("tease", "be teased"))
+Dr.Lee      
+str(Dr.Lee)   # 看list裡面的資訊
+```
+
+用符號$來取出特定的資料
+
+```{r}
+Dr.Lee$hobby        # Dr.Lee的嗜好
+Dr.Lee$age          # Dr.Lee的年紀
+```
+<br/>
+<br/>
+
+#### matrix, data frame
+<br/>
+1.矩陣(matrix)
+```{r}
+a <- matrix(c(1:6), nrow=3, ncol=2) #建立一個3x2的矩陣，依照column分別填入1~6的值
+a
+
+b<-matrix(c(1:6), nrow=3, ncol=2,byrow=T) #依照row分別填入1~6的值
+b
+```
+
+和矩陣相關的運算函數：  
+  
+t(x)：將矩陣轉置。  
+%*%：矩陣相乘。  
+diag()：產生一個對角矩陣，或回傳矩陣的對角線向量  
+det()：計算矩陣行列式值，一定是要對稱矩陣  
+solve()：傳回矩陣的反矩陣，非常適合解線性方程式  
+eigen()：計算矩陣的特徵向量與特徵值  
+<br/>
+<br/>
+
+2.資料框(data frame)  
+
+利用data.frame()函式，創造自己的data frame  
+```{r}
+color=c("red","red","red1","blue")
+number=c(1,3,5,7)
+logic=c(T,T,F,F)
+
+out.fr=data.frame(color,number,logics=logic)
+out.fr
+out.fr[,2]
+out.fr[,"number"]
+out.fr$number    # $可以用來指定「欄位名稱」，擷取該欄位的所有值
+2*out.fr
+```
+<br/>
+<br/>
+<br/>
+#### function  
+    Most of the work in R is done through functions.
+    
+* 敘述統計函數  
+    mean( )：平均值  
+    var( )：變異數  
+    sd( )：標準差 
+    median( )：中位數  
+    max( )：最大值  
+    min( )：最小值  
+    sum( )：綜合相加  
+    quantile( )：分位數  
+    range( )：全距  
+  
+ * 其他實用函式  
+  串接：paste( ), append( )
+```{r}
+# paste()：串接字串(把 "Happy"" 和 "White Day"" 兩個字串拼貼起來，sep代表連結字串的符號)
+paste("Happy", "White-Day", sep=" ") 
+
+# append()：把兩個vector串接起來 
+b <- c(1,2,3)
+c <- c(4,5,6)
+append(b, c)
+```
+<br/>
+  
+  合併：rbind( ), cbind( )
+```{r}
+a <- data.frame(x=c(1,2,3), y=c("Henry", "Lun", "Kevin"))
+b <- data.frame(x=c(4,5,6), y=c("Helen", "Tommy", "Leon"))
+rbind(a,b) # rbind()：把兩個data frame，依據row合併起來
+cbind(a,b) # cbind()：把兩個data frame，依據column合併起來
+```
+<br/>
+  
+  數列：sample( ), seq( )
+```{r}
+sample(x=1:100, size=10)  # 從1~100數字中，隨機挑10個數字，產生一個數列(vector)
+seq(from=1, to=5, by=0.5) # 產生一個「從1開始，每次加0.5，直到5為止」的數列(vector)
+```
+<br/>
+  
+  預覽：head( ), tail( )
+```{r}
+head(iris, n=6)  # head(): 顯示data frame中的前6筆資料
+tail(iris, n=6)  # tail(): 顯示data frame中的後6筆資料
+```
+<br/>
+  
+  排序：order( ), sort( )
+```{r}
+a <- sample(x=1:100, size=10) # 從1~100數字中，隨機挑10個數字，產生一個數列(vector)
+
+# 用order()，把數列由大排到小；從小排到大，decreasing = FALSE
+a[order(a, decreasing=TRUE)]   
+
+# 和 a[order(a, decreasing=TRUE)] 一樣效果
+sort(a, decreasing=TRUE)      
+```
+<br/>
+  
+  重複：unique( ), duplicated( )
+```{r}
+a <- c("A", "B", "C", "A", "A", "B")
+unique(a)       # 萃取資料中unique的element
+duplicated(a)            # 若後面有重複的資料，函式會回傳TRUE，而第一個資料會是FALSE
+a[duplicated(a)==FALSE]  # 和 unique(a)一樣效果
+```
+<br/>
+  
+  which()
+```{r}
+# which()：找出第幾個element是TRUE(在a裡面，第幾個element的值等於100)
+a <- c(68,73,99,100,56,100,85,36)
+which(a==100)
+```
+<br/>
+
+  object()
+```{r}
+objects()
+```
+可用objects() 函數來列出此工作空間中所有的object  
+<br/>
+
+  seq() 
+  創造一個序列，by=間隔數，若沒有則默認為1
+  rep() 
+  前面是要被重複的值，而後面是次數  
+  
+```{r}
+rep(10,5)
+rep(seq(11,30,by=3),3)
+rep(seq(11,30,3),3)
+rep(seq(11,30,3),rep(2,7))
+rep(seq(11,30,3),c(rep(2,3),rep(3,4)))
+```
+<br/>
+
+  substr() 最前面為向量，之後為要取的字串位，向量內的每一個值都要取  
+  paste() 將後面的值與前面的合併，中間有空格，可在最後加上sep="？"將空格改為該值  
+  paste0() 將後面的值與前面的合併，中間沒有空格  
+```{r}
+colors=c("brown","yellow","blue")
+
+substr(colors,2,3)
+
+paste(colors,"candy")
+paste0(colors,"candy")
+paste0(colors,"-","candy")
+ 
+paste(colors,c(colors,"red"))
+paste(colors,c(colors,"red"),sep=":")
+
+```
+
+<br/>
+<br/>
+
+### Built-in functions and online help  
+  There are many functions in R which are designed to do all sorts of things.  
+  help() function opens a window which will give you a description of the ()
+<br/>
+<br/>
+
+* Finding help when you don’t know the function name  
+  help.start(). This brings up an Internet browser.  
+  The browser will show you a menu of several options, including a listing of installed packages.  
+<br/>
+<br/>
+
+* Built-in graphics functions
+```{r}
+x=c(1:100,201:300)
+hist(x)
+
+x=seq(10,100,5)
+y=x^3-2*x
+plot(x,y)
+plot(x,y,type="l")
+
+curve(cos,from=1,to=3*pi)
+curve(x^3-2*x,from=1,to=3*pi)
+rm(x)
+x=seq(10,100,5)
+curve(x^3-2*x,from=1,to=3*pi)
+
+a=c(3,5,7)
+a>4
+b=c(1,5,8)
+a[a>b]
+
+x=c(1:100,201:300)
+hist.x=hist(x)
+hist.x
+```
+<br/>
+<br/>
+
+### Data input and output
+<br/>
+  
+* Changing directories
+<br/>
+```
+setwd("C:/temp.R")
+```
+<br/>
+<br/>
+
+* dump() and source()
+
+To save all of the objects that you have created during a session, type  
+```
+dump(list=objects(), "all.R")
+```
+create the vector list=objects() into the file all.R on your computer’s hard drive. 
+
+```
+source("all.R")
+```
+It allow you to retrieve all of these objects.  
+<br/>
+<br/>
+
+* Redirecting R output  
+  Output can be directed to a file with the sink() function.
+```
+sink("try2.txt")
+#Create a file try2.txt for output
+
+y=1:10
+y
+x=sin(y)
+x
+# Write x&y value to try.txt
+
+sink()            
+# Close solarmean.txt; print new output to screen
+```
+<br/>
+<br/>
+
+* Saving and retrieving image files  
+
+we could save all current workspace image information to a file called temp.RData by typing
+```
+save.image("temp.RData")
+```
+  we can type load("temp.RData") after entering an R session.  
+  Objects that were already in the current workspace image will remain.
+```
+load("temp.RData")
+```
+<br/>
+<br/>
+
+* Data frames and the read.table function
+
+If there is a data set is stored in a file called pretend.dat in the directory myfiles on the C: drive,
+it can be read into an R data frame. This can be accomplished by typing
+```
+> pretend.df <- read.table("c:/myfiles/pretend.dat", header=T)
+```
+In a data frame, the columns are named. To see the x column, type
+```
+pretend.df$x
+```
+<br/>
+<br/>
+
+## Programming statistical graphics
+
+### High-level plots  
+
+* Bar charts and dot charts  
+* Pie charts  
+* Histograms  
+* Box plots  
+* Scatterplots  
+* QQ plots  
+
+<br/>
+1.Bar charts and dot charts 
+```{r}
+VADeaths
+barplot(VADeaths, beside=TRUE, legend=TRUE, ylim=c(0, 90),ylab="Deaths per 1000",main="Death rates in Virginia")
+
+dotchart(VADeaths, xlim=c(0, 75),xlab="Deaths per 1000", main="Death rates in Virginia")
+```
+<br/>
+<br/>
+
+2.Pie charts  
+```{r}
+groupsizes <- c(18, 30, 32, 10, 10)
+labels <- c("A", "B", "C", "D", "F")
+pie(groupsizes, labels, col=c("grey40", "white", "grey", "black", "grey90"))
+
+```
+<br/>
+<br/>
+
+3.Histograms
+```{r}
+x <- rnorm(100)
+hist(x)
+
+```
+<br/>
+<br/>
+
+4.Box plots
+```{r}
+boxplot(Sepal.Length~Species, data = iris,ylab = "Sepal length (cm)", main = "Iris measurements",boxwex = 0.5)
+```
+<br/>
+<br/>
+
+5.Scatterplots
+```{r}
+x <- rnorm(100)     
+y <- rpois(100, 30) 
+plot(x, y, main = "Poisson versus Normal")
+plot(x, y, type="l") 
+plot(sort(x), sort(y), type="l") 
+```
+<br/>
+<br/>
+
+6.QQ plots
+```{r}
+X <- rnorm(1000)
+A <- rnorm(1000)
+qqplot(X, A, main="A and X are the same")
+B <- rnorm(1000, mean=3, sd=2)
+qqplot(X, B, main="B is rescaled X")
+C <- rt(1000, df=2)
+qqplot(X, C, main="C has heavier tails")
+D <- exp(rnorm(1000))
+qqplot(X, D, main="D is skewed to the right")
+```
+
+
+
+### Low-level graphics functions  
+
+* Adding to plots  
+* Setting graphical parameters  
+
+<br/>
+1. Adding to plots  
+
+函數 | 意義
+------------- | -------------
+points(x, y, ...) | adds points
+lines(x, y, ...)  | adds line segments  
+text(x, y, labels, ...) | adds text into the graph  
+abline(a, b, ...) | adds the line y = a + bx  
+abline(h=y, ...) | adds a horizontal line  
+abline(v=x, ...) | adds a vertical line  
+polygon(x, y, ...) | adds a closed and possibly filled polygon  
+segments(x0, y0, x1, y1, ...) | draws line segments  
+arrows(x0, y0, x1, y1, ...) | draws arrows  
+symbols(x, y, ...) | draws circles, squares, thermometers, etc.   
+legend(x, y, legend, ...) | draws a legend.  
+title(main, sub, xlab, ylab, ...) | adds a main title, a sub- title, an x-axis label and/or a y-axis label  
+mtext(text, side, line, ...)  | draws text in the margins  
+axis(side, at, labels, ...) |  adds an axis to the plot  
+box(...) | adds a box around the plot region.  
+<br/>
+<br/>
+
+2.Setting graphical parameters  
+
+函數 | 意義
+------------- | -------------
+windows(...) | to open a screen device in MS Windows  
+x11(...)or X11(...) | to open a screen device in Unix-alike systems   quartz(...) | to open a screen device in Mac OSX  
+postscript(...) | to open a file for Postscript output for printing  
+pdf(...) | to open a file for PDF output  
+jpeg(...) | to open a file for JPEG bitmap output  
+png(...) | to open a file for PNG bitmap output.  
+mfrow=c(m, n) | tells R to draw m rows and n columns of plots, rather than   going to a new page for each plot.
+mfg=c(i, j) | says to draw the figure in row i and column j next.  
+ask=TRUE | tells R to ask the user before erasing a plot to draw a new one.  
+cex=1.5 | tells R to expand characters by this amount in the plot region.    
+mar=c(side1, side2, side3, side4) | sets the margins of the plot to the given  numbers of lines of text on each side.  
+oma=c(side1, side2, side3, side4) | sets the outer margins (the region outside the array of plots).  
+usr=c(x1, x2, y1, y2) | sets the coordinate system within the plot with x and y coordinates on the given ranges.  
+<br/>
+<br/>
+
+## Programming with R
+<br/>
+
+### Flow control
+<br/>
+
+#### The for() loop
+>for (name in vector)  {commands}
+
+for() 是指先指定數值並重複執行指令
+```{r}
+Fibonacci <- numeric(12)
+Fibonacci[1] <- Fibonacci[2] <- 1
+for (i in 3:12) Fibonacci[i] <- Fibonacci[i - 2] + Fibonacci[i - 1]
+```
+<br/>
+<br/>
+
+#### The if() statement
+
+>
+ if  (condition) {  
+     commands when TRUE  
+ } else {  
+     commands when FALSE  
+}  
+
+```{r}
+corplot=function(x,y,plotit){
+if(plotit==TRUE)plot(x,y)
+cor(x,y)
+}
+
+corplot(c(1,3,5,7),c(2,2,10,2),F)
+corplot(c(1,3,5,7),c(2,2,10,2),T)
+```
+
+
+```{r}
+Eratosthenes=function(n){
+#Return a   prime numbers up to n (based on the sieve of Eratosthenes)
+	if (n>=2) {
+		sieve=seq(2,n)
+		primes=c()
+		for(i in seq(2,n)){
+			if (any(sieve==i)){
+				primes=c(primes,i)
+				sieve=c(sieve[(sieve%%i)!=0],i)
+		      }
+                  
+		}
+	      return(primes)
+	}else{
+	stop("Input value of n should be at least 2.")
+	}
+}
+Eratosthenes(50)
+
+```
+
+
+#### The while() loop
+
+>while (condition) {statements}  
+
+當 condition 為 TRUE 時, 執行迴圈內運算程式 statements, 並重複執行指令, 直到當 condition 為 FALSE 時停止
+```{r}
+Fib1=1
+Fib2=1
+Fibonacci=c(Fib1,Fib2)
+while(Fib2<300){
+	Fibonacci=c(Fibonacci,Fib2)
+	oldFib2=Fib2
+	Fib2=Fib1+Fib2
+	Fib1=oldFib2
+}
+Fibonacci
+```
+<br/>
+<br/>
+
+#### The repeat loop, and the break and next statements
+>repeat { statements }  
+if (condition) break  
+
+repeat() 與 while() 非常類似, repeat() 重複執行指令, 在迴圈中設定檢查迴圈控制條件, 通常與 break 並用, break 可以用於結束任何迴圈, 它是結束 repeat() 迴圈的唯一辦法
+```{r}
+x=1
+tolerance=0.000001 #10e-6
+repeat{
+	f=x^3+2*x^2-7
+	if (abs(f)<tolerance)break
+	f.prime=3*x^2+4*x
+	x=x-f/f.prime
+}
+x
+```
+<br/>
+<br/>
+
+
+### Miscellaneous programming tips  
+
+1.Using fix()  
+用fix(function.name) 函數來修改已有的函式
+R 會開啟一個編輯視窗, 顯示函式的內容, 修改後再關閉編輯視窗, 修改即完成  
+
+2.Documentation using #  
+用＃來解釋、備註，而R會忽略＃後的程式碼
+<br/>
+<br/>
+
+## Simulation
+
+### Generation of pseudorandom numbers(仿隨機數的產生)
+
+```{r}
+random.number <-numeric(50)
+random.seed <-27218
+for (j in 1:50){
+ random.seed<-(171*random.seed)%%30269
+ random.number[j] <- random.seed/30269
+}
+random.number
+```
+>runif(n, min = a, max = b)
+
+表示生成的随機數數量，min表示均匀分布的下限，max表示均匀分布的上限；若省略参數min、max,則默認生成[0,1]上的均匀分布隨機數。
+
+> set.seed(32789)
+
+設定產生隨機變數的初始值，一個特定的種子可以產生一個特定的偽隨機序列。
+
+> dbinom(x, size, prob)
+
+P(X = x)的值
+
+> pbinom(x, size, prob)
+
+P(X ≤ x)的值
+
+> qbinom( percentile, size, prob)
+
+Ｘ分佈的該percentile的值
+
+>rbinom(n, size, prob)
+
+大小為n的分配
+
+>dpois(x, lambda)  
+dexp(q, rate)  
+dnorm(mean = , sd = )  
+以此類推  
+
+### Rejection sampling
+
+```{r}
+set.seed(1)
+U1=runif(100000,max=2)
+U2=runif(100000)
+X=U1[U2<(1-abs(1-U1))]
+
+hist(X,breaks=50)
+```
+<br/>
+<br/>
+
+# Computational linear algebra  
+<br/>
+
+## Vectors and matrices in R  
+<br/>
+
+### Constructing matrix objects  
+
+>matrix(data, nrow, ncol)  # data is a vector of nrow*ncol values  
+cbind(d1, d2, ..., dm)    # d1, ..., dm are vectors (columns)  
+rbind(d1, d2, ..., dn)    # d1, ..., dn are vectors (rows)  
+ 
+矩陣不需要是正方形
+
+>the ith row : X[i,]  
+the jth column：X[, j]  
+
+<br/>
+<br/>
+
+# Numerical optimization
+
+## The golden section search method 
+
+```{r}
+f<-function(x){
+  abs(x-3.5)+(x-2)^2
+}
+curve(f,from=1,to=5)
+
+golden<-function(f,a,b,tol=0.0000001){
+  ratio<-2/(sqrt(5)+1)
+  x1<-b-ratio*(b-a)
+  x2<-a+ratio*(b-a)
+  f1<-f(x1)
+  f2<-f(x2)
+  while(abs(b-a)>tol){
+    if(f2>f1){
+      b<-x2
+      x2<-x1
+      f2<f1
+      x1<-b-ratio*(b-a)
+      f1<-f(x1)
+    }else{
+      a<-x1
+      x1<-x2
+      f1<-f2
+      x2<-a+ratio*(b-a)
+      f2<-f(x2)
+    }
+  }
+  return((a+b)/2)
+}
+
+golden(f,1,5)
+
+```
+
+
+
